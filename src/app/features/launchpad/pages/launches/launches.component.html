@@ -1,0 +1,26 @@
+   <div class="launches-container">
+    <h2>Launches</h2>
+    <mat-table [dataSource]="launches">
+      <!-- Auto-incrementing number column -->
+      <ng-container matColumnDef="number">
+        <mat-header-cell *matHeaderCellDef> Number </mat-header-cell>
+        <mat-cell *matCellDef="let row; let i = index"> {{ i + 1 }} </mat-cell>
+      </ng-container>
+  
+      <!-- Other columns -->
+      <ng-container matColumnDef="name">
+        <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+        <mat-cell *matCellDef="let launch"> {{ launch.name }} </mat-cell>
+      </ng-container>
+  
+      <ng-container matColumnDef="wikiLink">
+        <mat-header-cell *matHeaderCellDef> Wiki Link </mat-header-cell>
+        <mat-cell *matCellDef="let launch">
+          <a [href]="launch.wikipedia" target="_blank">{{ launch.name }}</a>
+        </mat-cell>
+      </ng-container>
+  
+      <mat-header-row *matHeaderRowDef="['number', 'name', 'wikiLink']"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: ['number', 'name', 'wikiLink'];"></mat-row>
+    </mat-table>
+  </div>

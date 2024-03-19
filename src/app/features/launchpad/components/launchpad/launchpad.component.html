@@ -1,0 +1,16 @@
+<div class="launchpads-container" *ngIf="launchpad">
+  <div class="launchpad-card" (click)="navigateToLaunches(launchpad.id)">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>{{ launchpad.name }}</mat-card-title>
+      </mat-card-header>
+      <img mat-card-image [src]="launchpad.image" alt="{{ launchpad.location.name }}">
+      <mat-card-content>
+        <p>Region: {{ launchpad.location.region }}</p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button color="primary" (click)="navigateToLaunches(launchpad.id)">View Launches</button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>

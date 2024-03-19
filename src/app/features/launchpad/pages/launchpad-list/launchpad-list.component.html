@@ -1,0 +1,22 @@
+<div class="search-bar">
+  <input type="text" matInput placeholder="Search Launchpads" [formControl]="searchQuery">
+</div>
+
+<div class="launchpads-container">
+  <div class="launchpad-card-wrapper">
+    <ng-container *ngFor="let launchpad of launchpads">
+      <div class="launchpad-card">
+        <app-launchpad [launchpad]="launchpad"></app-launchpad>
+      </div>
+    </ng-container>
+  </div>
+</div>
+
+<div class="pagination-container">
+  <mat-paginator [length]="totalItems$ | async"
+                [pageSize]="itemsPerPage$ | async"
+                [pageSizeOptions]="[5, 10, 25, 100]"
+                aria-label="Select page"
+                (page)="onPageChange($event)">
+  </mat-paginator>
+</div>
