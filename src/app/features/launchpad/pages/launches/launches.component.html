@@ -1,5 +1,6 @@
    <div class="launches-container">
     <h2>Launches</h2>
+    <div *ngIf="launches.length">
     <mat-table [dataSource]="launches">
       <!-- Auto-incrementing number column -->
       <ng-container matColumnDef="number">
@@ -23,4 +24,8 @@
       <mat-header-row *matHeaderRowDef="['number', 'name', 'wikiLink']"></mat-header-row>
       <mat-row *matRowDef="let row; columns: ['number', 'name', 'wikiLink'];"></mat-row>
     </mat-table>
+    </div>
+    <div *ngIf="launches.length === 0">
+        No Records found
+    </div>
   </div>

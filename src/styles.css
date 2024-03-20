@@ -1,0 +1,39 @@
+
+
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+body {
+  font-family: sans-serif;
+  background-color: grey;
+  color: white;
+  margin: 0;
+  padding: 0;
+}
+
+.app-container {
+  margin: 0 auto;
+}
+
+header,
+main,
+footer {
+  padding: 1rem;
+}
+
+h1,
+h2 {
+  color: white;
+  margin-bottom: 1rem;
+}
+
+a {
+  color: white;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}

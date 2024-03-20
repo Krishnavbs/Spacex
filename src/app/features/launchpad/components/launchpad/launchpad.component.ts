@@ -5,7 +5,7 @@ import { Launchpad } from '../../../../core/models/launchpad.model';
 @Component({
   selector: 'app-launchpad',
   templateUrl: './launchpad.component.html',
-  styleUrls: ['./launchpad.component.scss']
+  styleUrls: ['./launchpad.component.css']
 })
 export class LaunchpadComponent {
   @Input() launchpad!: Launchpad;

@@ -4,14 +4,14 @@ import { Launchpad } from '../../../../core/models/launchpad.model';
 import { debounceTime, distinctUntilChanged, filter, Observable } from 'rxjs';
 import { select, Store } from '@ngrx/store';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { searchLaunchpads, selectCurrentPage, selectItemsPerPage, selectTotalItems } from '../../store/selectors/launchpad.selectors';
+import { selectCurrentPage, selectItemsPerPage, selectTotalItems } from '../../store/selectors/launchpad.selectors';
 import { FormControl } from '@angular/forms';
 import * as LaunchpadActions from '../../store/actions/launchpad.actions'
 
 @Component({
   selector: 'app-launchpad-list',
   templateUrl: './launchpad-list.component.html',
-  styleUrls: ['./launchpad-list.component.scss']
+  styleUrls: ['./launchpad-list.component.css']
 })
 export class LaunchpadListComponent implements OnInit {
   launchpads: Launchpad[] = [];
@@ -53,5 +53,8 @@ export class LaunchpadListComponent implements OnInit {
     this.spaceXFacade.setPagination(event.pageIndex + 1, event.pageSize)
     this.spaceXFacade.loadLaunchpads();
   }
-  
+  clearSearchbar(){
+    this.spaceXFacade.loadLaunchpads();
+    this.searchQuery.reset()
+  }
 }

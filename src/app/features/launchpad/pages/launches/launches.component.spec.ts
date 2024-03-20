@@ -1,42 +1,41 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
-import { Store } from '@ngrx/store';
-import { Observable, of } from 'rxjs';
 import { LaunchesComponent } from './launches.component';
+import { of } from 'rxjs';
+import { Store } from '@ngrx/store';
 import { SpaceXFacade } from '../../spacex.facade';
-import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
-import { Launches } from '../../../../core/models/launchpad.model';
 
 describe('LaunchesComponent', () => {
   let component: LaunchesComponent;
   let fixture: ComponentFixture<LaunchesComponent>;
-  let route: ActivatedRoute;
-  let store: Store<any>; // Replace any with your store state interface
-  let spaceXFacade: SpaceXFacade;
-  let mockSpaceXFacade: { loadLaunches: { and: { returnValue: (arg0: Observable<Launches[]>) => void; }; }; };
+  let routeStub: Partial<ActivatedRoute>;
+  let spaceXFacadeStub: Partial<SpaceXFacade>;
 
   beforeEach(async () => {
-    mockSpaceXFacade = jasmine.createSpyObj('SpaceXFacade', ['loadLaunches']);
-    mockSpaceXFacade.loadLaunches.and.returnValue(of([])); 
-    const routeStub = { paramMap: of({ get: () => 'launchpad_id' }) }; // Replace 'launchpad_id' with a valid launchpad ID
-    const storeStub = { dispatch: () => {}, pipe: () => {} };
-    const spaceXFacadeStub = {
-      loadLaunches: () => {},
-      launches$: of([]) // Provide a mock launches observable
+    const routeStub = {
+      paramMap: of({
+        get: (key: string) => '123', 
+        has: (name: string) => name === 'id', 
+        getAll: (name: string) => (name === 'id' ? ['123'] : []),
+        keys: () => ['id'] 
+      })
     };
+
+    spaceXFacadeStub = {
+      loadLaunches: jasmine.createSpy(),
+      launches$: of([]) // Initial launch data
+    };
+
     await TestBed.configureTestingModule({
       declarations: [LaunchesComponent],
-      imports: [MatCardModule, MatTableModule],
       providers: [
         { provide: ActivatedRoute, useValue: routeStub },
-        { provide: Store, useValue: storeStub },
-        { provide: SpaceXFacade, useValue: spaceXFacadeStub }
-      ]
+        { provide: SpaceXFacade, useValue: spaceXFacadeStub },
+        { provide: Store, useValue: {} } // Mock Store
+      ],
+      imports: [MatTableModule]
     }).compileComponents();
-    route = TestBed.inject(ActivatedRoute);
-    store = TestBed.inject(Store);
-    spaceXFacade = TestBed.inject(SpaceXFacade);
   });
 
   beforeEach(() => {
@@ -49,33 +48,37 @@ describe('LaunchesComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should load launches on initialization with the launchpad ID from route', () => {
-    spyOn(spaceXFacade, 'loadLaunches');
+  it('should load launches for the specified launchpad on initialization', () => {
+    expect(spaceXFacadeStub.loadLaunches).toHaveBeenCalledWith('123');
+  });
+
+  it('should update launches property when launches$ emits new launches', fakeAsync(() => {
+    const newLaunches = [
+      {
+        id: '1',
+        name: 'Launch 1',
+        success: true,
+        wikipedia: 'https://en.wikipedia.org/wiki/Launch_1',
+        launchpad: 'Launchpad 1'
+      },
+      {
+        id: '2',
+        name: 'Launch 2',
+        success: false,
+        wikipedia: 'https://en.wikipedia.org/wiki/Launch_2',
+        launchpad: 'Launchpad 2'
+      },
+      {
+        id: '3',
+        name: 'Launch 3',
+        success: true,
+        wikipedia: 'https://en.wikipedia.org/wiki/Launch_3',
+        launchpad: 'Launchpad 3'
+      }
+    ];
+    spaceXFacadeStub.launches$ = of(newLaunches);
     component.ngOnInit();
-    expect(spaceXFacade.loadLaunches).toHaveBeenCalledWith('launchpad_id');
-  });
-
-  it('should update launches when launches$ emits new data', () => {
-    // const mockLaunches = [ {id: '1',
-    // name: 'launch 1',
-    // success: true,
-    // wikipedia: 'wikiLink',
-    // launchpad: 'ATC',
-    // }];
-    // component.ngOnInit();
-    // expect(component.launches).toEqual([]);
-    // spyOn(store, 'pipe').and.returnValue(of(mockLaunches));
-    // fixture.detectChanges();
-    // expect(component.launches).toEqual(mockLaunches);
-    const mockLaunches: Launches[] = [{ id: '1', name: 'launch 1', success: true, wikipedia: 'wikiLink', launchpad: 'ATC' }];
-
-    // Update the mocked observable to emit the mock data
-    mockSpaceXFacade.loadLaunches.and.returnValue(of(mockLaunches));
-
-    // Trigger change detection
     fixture.detectChanges();
-
-    // Check if launches are updated
-    expect(component.launches).toEqual(mockLaunches);
-  });
+    expect(component.launches).toEqual(newLaunches);
+  }));
 });

@@ -7,7 +7,7 @@ export const selectLaunchpadState = createFeatureSelector<LaunchpadState>('launc
 
 export const selectLaunchpads = createSelector(
   selectLaunchpadState,
-  (state: LaunchpadState) => state.launchpads
+  (state: LaunchpadState) => state?.launchpads
 );
 
 export const selectLaunchpadsLoading = createSelector(

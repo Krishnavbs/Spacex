@@ -1,42 +1,33 @@
 // import { ComponentFixture, TestBed } from '@angular/core/testing';
-// import { RouterTestingModule } from '@angular/router/testing';
-// import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 // import { LaunchpadListComponent } from './launchpad-list.component';
-// import { Store } from '@ngrx/store';
-// import { Observable, of } from 'rxjs';
 // import { SpaceXFacade } from '../../spacex.facade';
+// import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 // import { ReactiveFormsModule } from '@angular/forms';
+// import { Store, StoreModule } from '@ngrx/store';
+// import * as LaunchpadActions from '../../store/actions/launchpad.actions';
+// import { provideMockStore, MockStore } from '@ngrx/store/testing';
+// import { of } from 'rxjs';
 // import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 // describe('LaunchpadListComponent', () => {
 //   let component: LaunchpadListComponent;
 //   let fixture: ComponentFixture<LaunchpadListComponent>;
-//   let storeMock: jasmine.SpyObj<Store>;
-//   let spaceXFacade: jasmine.SpyObj<SpaceXFacade>;
-//   let mockSpaceXFacade: {
-//     setPagination: jasmine.Spy<any>; 
-//     loadLaunchpads: jasmine.Spy<any>; 
-// };
-//   let store: Store<any>; // Import Store and add it here
+//   let spaceXFacade: SpaceXFacade;
+//   let store: MockStore;
 
 //   beforeEach(async () => {
-//     storeMock = jasmine.createSpyObj('Store', ['dispatch', 'pipe']);
 //     await TestBed.configureTestingModule({
 //       declarations: [LaunchpadListComponent],
-//       imports: [MatPaginatorModule, ReactiveFormsModule, BrowserAnimationsModule],
-//       providers: [{ provide: Store, useValue: storeMock }]
+//       imports: [ReactiveFormsModule, StoreModule.forRoot({}), MatPaginatorModule, BrowserAnimationsModule],
+//       providers: [SpaceXFacade, provideMockStore()]
 //     }).compileComponents();
 //   });
 
 //   beforeEach(() => {
 //     fixture = TestBed.createComponent(LaunchpadListComponent);
 //     component = fixture.componentInstance;
-//     mockSpaceXFacade = {
-//       setPagination: jasmine.createSpy('setPagination'),
-//       loadLaunchpads: jasmine.createSpy('loadLaunchpads').and.returnValue({
-//           subscribe: () => {} // Stubbing the subscribe method
-//       }),
-//   };
+//     spaceXFacade = TestBed.inject(SpaceXFacade);
+//     store = TestBed.inject(MockStore);
 //     fixture.detectChanges();
 //   });
 
@@ -45,63 +36,71 @@
 //   });
 
 //   it('should load launchpads on initialization', () => {
-//     expect(mockSpaceXFacade.loadLaunchpads).toHaveBeenCalled();
-//   });
-
-//   it('should set pagination on page change', () => {
-//     const event = { pageIndex: 1, pageSize: 10 } as MatPaginator;
-//     component.onPageChange(event);
-//     expect(mockSpaceXFacade.setPagination).toHaveBeenCalledWith(2, 10);
-//   });
-
-//   it('should set pagination on page change', () => {
-//     const event = { pageIndex: 1, pageSize: 10 } as MatPaginator;
-//     component.onPageChange(event);
-//     expect(mockSpaceXFacade.setPagination).toHaveBeenCalledWith(2, 10);
+//     spyOn(spaceXFacade, 'loadLaunchpads');
+//     spyOn(spaceXFacade, 'setPagination');
+//     component.ngOnInit();
+//     expect(spaceXFacade.loadLaunchpads).toHaveBeenCalled();
+//     expect(spaceXFacade.setPagination).toHaveBeenCalled();
 //   });
 
 //   it('should dispatch searchLaunchpads action on searchQuery value changes', () => {
-//     const query = 'test';
-//     const spy = spyOn(store, 'dispatch'); // Use store instead of component.store
-//     component['searchQuery'].setValue(query); // Access private property using indexer
-//     expect(spy).toHaveBeenCalled();
+//     spyOn(store, 'dispatch');
+//     component.searchQuery.setValue('Test');
+//     expect(store.dispatch).toHaveBeenCalledWith(
+//       LaunchpadActions.searchLaunchpads({ query: 'Test' })
+//     );
 //   });
 
+//   it('should call clearSearchbar method', () => {
+//     spyOn(spaceXFacade, 'loadLaunchpads');
+//     spyOn(component.searchQuery, 'reset');
+//     component.clearSearchbar();
+//     expect(spaceXFacade.loadLaunchpads).toHaveBeenCalled();
+//     expect(component.searchQuery.reset).toHaveBeenCalled();
+//   });
+
+//   it('should call onPageChange method', () => {
+//     spyOn(spaceXFacade, 'setPagination');
+//     spyOn(spaceXFacade, 'loadLaunchpads');
+//     const event: PageEvent = { pageIndex: 1, pageSize: 10, length: 20 };
+//     component.onPageChange(event);
+//     expect(spaceXFacade.setPagination).toHaveBeenCalledWith(2, 10);
+//     expect(spaceXFacade.loadLaunchpads).toHaveBeenCalled();
+//   });
 // });
-
-
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { ReactiveFormsModule } from '@angular/forms';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { LaunchpadListComponent } from './launchpad-list.component';
-import { Store } from '@ngrx/store';
 import { SpaceXFacade } from '../../spacex.facade';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { ReactiveFormsModule, FormControl } from '@angular/forms';
+import { StoreModule, Store } from '@ngrx/store';
+import * as LaunchpadActions from '../../store/actions/launchpad.actions';
+import { provideMockStore, MockStore } from '@ngrx/store/testing';
 import { of } from 'rxjs';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('LaunchpadListComponent', () => {
   let component: LaunchpadListComponent;
   let fixture: ComponentFixture<LaunchpadListComponent>;
-  let storeMock: jasmine.SpyObj<Store>;
-  let spaceXFacade: jasmine.SpyObj<SpaceXFacade>;
+  let spaceXFacade: SpaceXFacade;
+  let store: MockStore;
+  let spaceXFacadeSpy: jasmine.SpyObj<SpaceXFacade>;
+  
 
   beforeEach(async () => {
-    storeMock = jasmine.createSpyObj('Store', ['dispatch', 'pipe']);
-    spaceXFacade = jasmine.createSpyObj('SpaceXFacade', ['setPagination', 'loadLaunchpads']);
-
+    spaceXFacadeSpy = jasmine.createSpyObj('SpaceXFacade', ['loadLaunchpads', 'launchpads$', 'setPagination']);
     await TestBed.configureTestingModule({
       declarations: [LaunchpadListComponent],
-      imports: [MatPaginatorModule, ReactiveFormsModule, BrowserAnimationsModule],
-      providers: [
-        { provide: Store, useValue: storeMock },
-        { provide: SpaceXFacade, useValue: spaceXFacade }
-      ]
+      imports: [ReactiveFormsModule, StoreModule.forRoot({}), MatPaginatorModule, BrowserAnimationsModule],
+      providers: [SpaceXFacade, provideMockStore()]
     }).compileComponents();
   });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(LaunchpadListComponent);
     component = fixture.componentInstance;
+    spaceXFacade = TestBed.inject(SpaceXFacade);
+    store = TestBed.inject(MockStore);
     fixture.detectChanges();
   });
 
@@ -109,38 +108,38 @@ describe('LaunchpadListComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  // it('should load launchpads on initialization', () => {
-  //     const launchpads: any[] = [
-  //         {"id":"1","name":"Launchpad 1","location":{"name":"Location 1","region":"Region 1"},"image":"path/to/image-1","launches":[{"mission":"Mission 1 from Launchpad 1","date":"2024-03-16"},{"mission":"Mission 2 from Launchpad 1","date":"2024-03-17"}]},
-  //         {"id":"2","name":"Launchpad 2","location":{"name":"Location 2","region":"Region 2"},"image":"path/to/image-2","launches":[{"mission":"Mission 1 from Launchpad 2","date":"2024-03-16"},{"mission":"Mission 2 from Launchpad 2","date":"2024-03-17"}]},
-  //         {"id":"3","name":"Launchpad 3","location":{"name":"Location 3","region":"Region 3"},"image":"path/to/image-3","launches":[{"mission":"Mission 1 from Launchpad 3","date":"2024-03-16"},{"mission":"Mission 2 from Launchpad 3","date":"2024-03-17"}]},
-  //         {"id":"4","name":"Launchpad 4","location":{"name":"Location 4","region":"Region 4"},"image":"path/to/image-4","launches":[{"mission":"Mission 1 from Launchpad 4","date":"2024-03-16"},{"mission":"Mission 2 from Launchpad 4","date":"2024-03-17"}]},
-  //         {"id":"5","name":"Launchpad 5","location":{"name":"Location 5","region":"Region 5"},"image":"path/to/image-5","launches":[{"mission":"Mission 1 from Launchpad 5","date":"2024-03-16"},{"mission":"Mission 2 from Launchpad 5","date":"2024-03-17"}]}
-  //     ];
-  
-  //     spyOn(spaceXFacade, 'loadLaunchpads').and.callFake(() => {
-  //         component.launchpads = launchpads; // Set the component property with the mock launchpads
-  //         return of([]); // Return an observable of void
-  //     });
-  
-  //     component.ngOnInit(); // Trigger the ngOnInit method
-  
-  //     expect(spaceXFacade.loadLaunchpads).toHaveBeenCalled(); // Check if the method was called
-  // });
-  
+  it('should load launchpads on initialization', () => {
+    spyOn(spaceXFacade, 'loadLaunchpads');
+    component.ngOnInit();
+    expect(spaceXFacade.loadLaunchpads).toHaveBeenCalled();
+  });
 
-  it('should set pagination on page change', () => {
-    const event = { pageIndex: 1, pageSize: 10 } as MatPaginator;
+  it('should dispatch searchLaunchpads action on searchQuery value changes', fakeAsync(() => {
+    spyOn(store, 'dispatch');
+    component.searchQuery.setValue('te');
+    fixture.detectChanges(); 
+    tick(300); 
+    expect(store.dispatch).not.toHaveBeenCalled();
+    component.searchQuery.setValue('test');
+    fixture.detectChanges(); 
+    tick(300);
+    expect(store.dispatch).toHaveBeenCalledWith(LaunchpadActions.searchLaunchpads({ query: 'test' }));
+  }));
+
+  it('should clear searchQuery and load launchpads on clearSearchbar method call', () => {
+    spyOn(spaceXFacade, 'loadLaunchpads');
+    spyOn(component.searchQuery, 'reset');
+    component.clearSearchbar();
+    expect(spaceXFacade.loadLaunchpads).toHaveBeenCalled();
+    expect(component.searchQuery.reset).toHaveBeenCalled();
+  });
+
+  it('should call setPagination and load launchpads on onPageChange method', () => {
+    spyOn(spaceXFacade, 'setPagination');
+    spyOn(spaceXFacade, 'loadLaunchpads');
+    const event: PageEvent = { pageIndex: 1, pageSize: 10, length: 20 };
     component.onPageChange(event);
     expect(spaceXFacade.setPagination).toHaveBeenCalledWith(2, 10);
+    expect(spaceXFacade.loadLaunchpads).toHaveBeenCalled();
   });
-
-  it('should dispatch searchLaunchpads action on searchQuery value changes', () => {
-    const query = 'test';
-    component.searchQuery.setValue(query);
-    expect(storeMock.dispatch).toHaveBeenCalled();
-  });
-  
-
 });
-

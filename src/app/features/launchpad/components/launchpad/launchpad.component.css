@@ -1,0 +1,81 @@
+ .launchpads-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(20%, 1fr)); 
+  gap: 1rem;
+  text-align: center;
+  font-size: 2vw; 
+}
+
+.launchpad-card {
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  background-color: #605f5f;
+  position: relative;
+}
+
+.launchpad-card:hover {
+  transform: scale(1.02);
+}
+.mat-mdc-card-header{
+  padding: 2%
+}
+.mat-card {
+  background-color: rgb(44, 44, 44);
+  color: white;
+  position: relative;
+}
+
+.mat-card-title {
+  color: orange;
+  text-align: center;
+  padding: 1vw; 
+}
+
+img {
+  width: 100%;
+  height: 20vw;
+  object-fit: cover;
+}
+
+.title {
+  font-weight: bold;
+  text-shadow: 0.1vw 0.1vw 0.2vw rgba(0, 0, 0, 0.8); 
+  text-align: center;
+}
+
+.region {
+  text-align: center;
+  margin-top: auto;
+  margin-bottom: 2%;
+  font-size: 1.5vw; 
+}
+
+.view-launches {
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+  background-color: #a5a8a5;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 2vw;
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  width: 100%;
+  height: 100%;
+  transform: translate(-50%, -50%);
+}
+button{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  color: black;
+  font-size: 26px;
+  text-shadow: 0.1vw 0.1vw 0.2vw rgba(0, 0, 0, 0.8); 
+}
+.launchpad-card:hover .view-launches {
+  opacity: 0.5;
+}

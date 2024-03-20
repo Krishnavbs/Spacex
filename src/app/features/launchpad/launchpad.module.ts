@@ -39,7 +39,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MatPaginatorModule,
     MatTableModule,
     RouterModule,
-    MatAutocompleteModule,
     MatFormFieldModule,
     StoreModule.forFeature('launchpad', launchpadReducer),
     EffectsModule.forFeature([LaunchpadEffects])

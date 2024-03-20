@@ -8,7 +8,7 @@ import { SpaceXFacade } from '../../spacex.facade';
 @Component({
   selector: 'app-launches',
   templateUrl: './launches.component.html',
-  styleUrls: ['./launches.component.scss']
+  styleUrls: ['./launches.component.css']
 })
 export class LaunchesComponent implements OnInit {
   launchpadId!: string;

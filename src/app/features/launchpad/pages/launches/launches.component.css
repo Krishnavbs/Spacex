@@ -1,0 +1,43 @@
+.launches-container {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+h2 {
+  color: #faf3f3;
+  font-size: 49px;
+}
+
+.mat-mdc-table {
+  width: 80%; /* Adjust width as needed */
+  margin: 0 auto; /* Center the table */
+  background-color: white;
+  border-collapse: collapse;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.mdc-data-table__table{
+  min-width: 75%
+}
+.mat-mdc-table th.mat-mdc-header-cell,
+.mat-mdc-table td.mat-mdc-cell {
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+}
+
+.mat-mdc-table th.mat-mdc-header-cell {
+  background-color: #f8f8f8;
+  color: #333;
+}
+
+.mat-mdc-table tr:nth-child(even) {
+  background-color: #f2f2f2; /* Alternate row color */
+}
+
+.mat-mdc-table a {
+  color: orange;
+  text-decoration: underline;
+}
+
+.mat-mdc-table a:hover {
+  text-decoration: none;
+}

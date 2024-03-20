@@ -9,6 +9,9 @@ import * as LaunchpadSelectors from './store/selectors/launchpad.selectors';
   providedIn: 'root'
 })
 export class SpaceXFacade {
+  searchLaunchpads(searchLaunchpads: any) {
+    throw new Error('Method not implemented.');
+  }
   launchpads$: Observable<Launchpad[]> = this.store.pipe(select(LaunchpadSelectors.selectLaunchpads));
   loading$: Observable<boolean> = this.store.pipe(select(LaunchpadSelectors.selectLaunchpadsLoading));
   error$: Observable<any> = this.store.pipe(select(LaunchpadSelectors.selectLaunchpadsError));

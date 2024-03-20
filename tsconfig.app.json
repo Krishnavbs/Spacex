@@ -13,7 +13,7 @@
     "server.ts"
   ],
   "include": [
-    "src/**/*.d.ts"
+    "src/**/*.d.ts",
   ],
   "exclude": [
     "node_modules",
@@ -22,6 +22,7 @@
     "./node_modules/@types/node/index.d.ts",
     ".editorconfig",
     ".gitignore",
-    ".vscode/"
+    ".vscode/",
+    "cypress/global.d.ts" 
   ]
 }
